@@ -75,11 +75,11 @@ int _printf(const char *format, ...)
 				   buffer_index = 0;
 			   }
 		  }
-		  buffer[buffer_index] = '\0';
-		  write(STDOUT_FILENO, buffer, buffer_index);
-		  va_end(args);
-
+		 
 	  }
+	   buffer[buffer_index] = '\0';
+                  write(STDOUT_FILENO, buffer, buffer_index);
+                  va_end(args);
 	 return (charCount);
 
 }

@@ -3,10 +3,10 @@
 
 int main(void)
 {
-	_printf("%s\n", "Mark");
 	printf("%s\n", "Mark");
-	_printf("%c\n", 'A');
+	_printf("%s\n", "Mark");
 	printf("%c\n", 'A');
-
+	_printf("%c\n", 'A');
+	
 	 return (0);
 }
