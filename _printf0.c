@@ -26,6 +26,7 @@ char *_strncpy(char *dest, const char *src, int n)
 
 	return (dest);
 }
+
 /**
  * _printf - functions to print %s,%c, % format speciers
  * @format: is a character string
@@ -40,46 +41,44 @@ int _printf(const char *format, ...)
 	int len;
 	int i;
 	const char *string;
-
 	va_list args;
+
 	va_start(args, format);
-
-	  for (i = 0; format[i] != '\0'; i++)
-	  {
-		  if (format[i] == '%')
-		  {
-			  i++;
-			   if (format[i] == 'c')
-			   {
-				   character = va_arg(args, int);
-				   buffer[buffer_index++] = character;
-				   charCount++;
-			   }
-			   else if (format[i] == 's')
-			   {
-				   string = va_arg(args, const char *);
-				   len = strlen(string);
-				   _strncpy(buffer + buffer_index, string, BUFFER_SIZE - buffer_index);
-				    buffer_index += len < BUFFER_SIZE - buffer_index ? len : BUFFER_SIZE - buffer_index;
-				    charCount += len;
-			   }
-			   else if (format[i] == '%')
-			   {
-				    buffer[buffer_index++] = '%';
-				     charCount++;
-			   }
-			   if (buffer_index >= BUFFER_SIZE - 1)
-			   {
-				   buffer[BUFFER_SIZE - 1] = '\0';
-				   write(STDOUT_FILENO, buffer, buffer_index);
-				   buffer_index = 0;
-			   }
-		  }
-		 
-	  }
-	   buffer[buffer_index] = '\0';
-                  write(STDOUT_FILENO, buffer, buffer_index);
-                  va_end(args);
-	 return (charCount);
-
+	for (i = 0; format[i] != '\0'; i++)
+	{
+		if (format[i] == '%')
+		{
+			i++;
+			if (format[i] == 'c')
+			{
+				character = va_arg(args, int);
+				buffer[buffer_index++] = character;
+				charCount++;
+			}
+			else if (format[i] == 's')
+			{
+				string = va_arg(args, const char *);
+				len = strlen(string);
+				_strncpy(buffer + buffer_index, string, BUFFER_SIZE - buffer_index);
+				buffer_index += len < BUFFER_SIZE - buffer_index ?
+				len : BUFFER_SIZE - buffer_index;
+				charCount += len;
+			}
+			else if (format[i] == '%')
+			{
+				buffer[buffer_index++] = '%';
+				charCount++;
+			}
+			if (buffer_index >= BUFFER_SIZE - 1)
+			{
+				buffer[BUFFER_SIZE - 1] = '\0';
+				write(STDOUT_FILENO, buffer, buffer_index);
+				buffer_index = 0;
+			}
+		}
+	}
+	buffer[buffer_index] = '\0';
+	write(STDOUT_FILENO, buffer, buffer_index);
+	va_end(args);
+	return (charCount);
 }
