@@ -1,5 +1,5 @@
-
 #include "main.h"
+
 void print_buffer(char buffer[], int *buff_ind);
 /**
  * print_buffer - function to print the buffer
@@ -29,7 +29,7 @@ int _printf(const char *format, ...)
 	int flags, width, precision, size, buff_ind = 0;
     int  printer = 0;
     va_list list;
-	char buffer[BUFF_SIZE];
+	char buffer[BUFFER_SIZE];
 
 	if (format == NULL)
 		return (-1);
@@ -41,9 +41,11 @@ int _printf(const char *format, ...)
 		if (format[j] != '%')
 		{
 			buffer[buff_ind++] = format[j];
-			if (buff_ind == BUFF_SIZE)
+			if (buff_ind == BUFFER_SIZE)
+			{
 				print_buffer(buffer, &buff_ind);
 				printer_chars++;
+			}
 		}
 		else
 		{
