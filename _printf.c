@@ -1,13 +1,10 @@
-#include "main.h"
 
+#include "main.h"
 void print_buffer(char buffer[], int *buff_ind);
 /**
  * print_buffer - function to print the buffer
  * @buffer: arguments to shows the arrays
- * @buff_ind:  arguments to show index at which to add next 
- * char, represents the length.
- *
- * Return: void
+ * @buff_ind:  arguments to show index at which to add next char, represents the length.
  */
 void print_buffer(char buffer[], int *buff_ind)
 {
@@ -28,11 +25,11 @@ void print_buffer(char buffer[], int *buff_ind)
 int _printf(const char *format, ...)
 {
 	int j;
-	int printer_chars = 0;
-	int bendera, length, preci, sizen, buff_ind = 0;
-	int  printer = 0;
-	va_list list;
-	char buffer[BUFFER_SIZE];
+    int printer_chars = 0;
+	int flags, width, precision, size, buff_ind = 0;
+    int  printer = 0;
+    va_list list;
+	char buffer[BUFF_SIZE];
 
 	if (format == NULL)
 		return (-1);
@@ -44,22 +41,20 @@ int _printf(const char *format, ...)
 		if (format[j] != '%')
 		{
 			buffer[buff_ind++] = format[j];
-			if (buff_ind == BUFFER_SIZE)
-			{
+			if (buff_ind == BUFF_SIZE)
 				print_buffer(buffer, &buff_ind);
 				printer_chars++;
-			}
 		}
 		else
 		{
 			print_buffer(buffer, &buff_ind);
-			bendera = get_flags(format, &j);
-			length = get_width(format, &j, list);
-			preci = get_precision(format, &j, list);
-			sizen = get_size(format, &j);
+			flags = get_flags(format, &j);
+			width = get_width(format, &j, list);
+			precision = get_precision(format, &j, list);
+			size = get_size(format, &j);
 			++j;
 			printer = handle_print(format, &j, list, buffer,
-				bendera, length, preci, sizen);
+				flags, width, precision, size);
 			if (printer == -1)
 				return (-1);
 			printer_chars += printer;
