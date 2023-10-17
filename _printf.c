@@ -1,84 +1,70 @@
 #include "main.h"
-#include <unistd.h>
-#include <stdarg.h>
-#include <string.h>
+void print_buffer(char buffer[], int *buff_ind);
 /**
- * _strncpy - copies a string
- * @dest: The destination of copy
- * @src: The source of the character to be copied
- * @n: The number of bytes to copy
- *
- * Return: pointer dest
+ * print_buffer - function to print the buffer
+ * @buffer: arguments to shows the arrays
+ * @buff_ind:  arguments to show index at which to add next char, represents the length.
  */
-char *_strncpy(char *dest, const char *src, int n)
+void print_buffer(char buffer[], int *buff_ind)
 {
-	int i;
+	if (*buff_ind > 0)
+		write(1, &buffer[0], *buff_ind);
 
-	for (i = 0; i < n && src[i] != '\0'; i++)
-	{
-		dest[i] = src[i];
-	}
-
-	for (; i < n; i++)
-	{
-		dest[i] = '\0';
-	}
-
-	return (dest);
+	*buff_ind = 0;
 }
 
+
+
+
 /**
- * _printf - functions to print %s,%c, % format speciers
- * @format: is a character string
- * Return: returns an integer
+ * _printf - function to show %,c, s
+ * @format: the strings taged inside the format string
+ * Return: the printed chaeracters.
  */
 int _printf(const char *format, ...)
 {
-	char character;
-	char buffer[BUFFER_SIZE];
-	int buffer_index = 0;
-	int charCount = 0;
-	int len;
-	int i;
-	const char *string;
-	va_list args;
+	int j;
+    int printer_chars = 0;
+	int bendera, length, preci, sizen, buff_ind = 0;
+    int  printer = 0;
+    va_list list;
+	char buffer[BUFF_SIZE];
 
-	va_start(args, format);
-	for (i = 0; format[i] != '\0'; i++)
+	if (format == NULL)
+		return (-1);
+
+	va_start(list, format);
+
+	for (j = 0; format && format[j] != '\0'; j++)
 	{
-		if (format[i] == '%')
+		if (format[j] != '%')
 		{
-			i++;
-			if (format[i] == 'c')
-			{
-				character = va_arg(args, int);
-				buffer[buffer_index++] = character;
-				charCount++;
-			}
-			else if (format[i] == 's')
-			{
-				string = va_arg(args, const char *);
-				len = strlen(string);
-				_strncpy(buffer + buffer_index, string, BUFFER_SIZE - buffer_index);
-				buffer_index += len < BUFFER_SIZE - buffer_index ?
-				len : BUFFER_SIZE - buffer_index;
-				charCount += len;
-			}
-			else if (format[i] == '%')
-			{
-				buffer[buffer_index++] = '%';
-				charCount++;
-			}
-			if (buffer_index >= BUFFER_SIZE - 1)
-			{
-				buffer[BUFFER_SIZE - 1] = '\0';
-				write(STDOUT_FILENO, buffer, buffer_index);
-				buffer_index = 0;
-			}
+			buffer[buff_ind++] = format[j];
+			if (buff_ind == BUFF_SIZE)
+				print_buffer(buffer, &buff_ind);
+				printer_chars++;
+		}
+		else
+		{
+			print_buffer(buffer, &buff_ind);
+			bendera = get_flags(format, &j);
+			length = get_width(format, &j, list);
+			preci = get_precision(format, &j, list);
+			sizen = get_size(format, &j);
+			++j;
+			printer = handle_print(format, &j, list, buffer,
+				bendera, length, preci, sizen);
+			if (printer == -1)
+				return (-1);
+			printer_chars += printer;
 		}
 	}
-	buffer[buffer_index] = '\0';
-	write(STDOUT_FILENO, buffer, buffer_index);
-	va_end(args);
-	return (charCount);
+
+	print_buffer(buffer, &buff_ind);
+
+	va_end(list);
+
+	return (printer_chars);
 }
+
+
