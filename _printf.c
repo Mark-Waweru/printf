@@ -1,9 +1,13 @@
 #include "main.h"
+
 void print_buffer(char buffer[], int *buff_ind);
 /**
  * print_buffer - function to print the buffer
  * @buffer: arguments to shows the arrays
- * @buff_ind:  arguments to show index at which to add next char, represents the length.
+ * @buff_ind:  arguments to show index at which to add next 
+ * char, represents the length.
+ *
+ * Return: void
  */
 void print_buffer(char buffer[], int *buff_ind)
 {
@@ -24,11 +28,11 @@ void print_buffer(char buffer[], int *buff_ind)
 int _printf(const char *format, ...)
 {
 	int j;
-    int printer_chars = 0;
+	int printer_chars = 0;
 	int bendera, length, preci, sizen, buff_ind = 0;
-    int  printer = 0;
-    va_list list;
-	char buffer[BUFF_SIZE];
+	int  printer = 0;
+	va_list list;
+	char buffer[BUFFER_SIZE];
 
 	if (format == NULL)
 		return (-1);
@@ -40,9 +44,11 @@ int _printf(const char *format, ...)
 		if (format[j] != '%')
 		{
 			buffer[buff_ind++] = format[j];
-			if (buff_ind == BUFF_SIZE)
+			if (buff_ind == BUFFER_SIZE)
+			{
 				print_buffer(buffer, &buff_ind);
 				printer_chars++;
+			}
 		}
 		else
 		{
